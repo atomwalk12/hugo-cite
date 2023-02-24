@@ -98,10 +98,10 @@
 {{- if gt (len $bibliographyPath) 0 -}}{{/* Begin Bibliography Loop */}}
 {{- $bibliography := getJSON $bibliographyPath -}}
 {{- /* -------------------- END Bibliography path -------------------- */ -}}
-
+<!--custom code -->
   <span class="hugo-cite-intext"
-        itemprop="citation">(
-
+        itemprop="citation">{{- if not $suppressAuthor -}}({{end}}
+<!--custom code end -->
     {{- /* Range over citation keys */ -}}
 
     {{- range $keyIndex, $key := $keys -}}
@@ -120,7 +120,7 @@
             {{- $reference := . -}}
 
             {{- /* -------------------- BEGIN Display authors -------------------- */ -}}
-            {{- if not $suppressAuthor -}}
+            <!--custom code line removed -->
               {{- $displayAuthors := $reference.author -}}
               {{- if not $reference.author -}}
                 {{- $displayAuthors = $reference.editor -}}
@@ -148,8 +148,11 @@
                 {{ if gt (len $displayAuthors) 2 }}
                   <em>&amp; al.</em>
                 {{- end -}}
-              {{- end -}},&#32;
-            {{- end -}}
+              {{- end -}}
+              <!--custom code -->
+              {{- if not $suppressAuthor -}},&#32;{{else}}&#32;({{end}}
+              <!--custom code end -->
+            <!--custom code line removed -->
             {{- /* -------------------- END Display authors -------------------- */ -}}
 
             {{- if and (isset $reference "issued") (isset $reference.issued "date-parts") -}}
