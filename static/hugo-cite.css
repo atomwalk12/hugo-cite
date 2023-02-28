@@ -3,7 +3,8 @@
 /* ----------------------------------------------------------------------------- */
 
 .hugo-cite-group {
-  display: inline-block;
+  /* commented to allow breaks */
+  /* display: inline-block; */
   vertical-align: baseline;
   /*compensate for lower height */
   position: relative;
