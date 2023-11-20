@@ -116,7 +116,8 @@
           {{- /* Add to the collection of cited references */ -}}
           {{- $.Page.Scratch.SetInMap "citedBib" $key $currentRef -}}
 
-          <a href="#{{- $key | urlize -}}"><span class="visually-hidden">Citation: </span>
+          <a href="#{{- $key | urlize -}}">
+            {{- /* <span class="visually-hidden">Citation: </span> */ -}}
             {{- $reference := . -}}
 
             {{- /* -------------------- BEGIN Display authors -------------------- */ -}}
