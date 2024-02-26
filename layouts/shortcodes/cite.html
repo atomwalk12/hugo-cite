@@ -132,6 +132,7 @@
                 </span>
               {{- else -}}
                 {{- range $authorIndex, $author := $displayAuthors | first 2 -}}
+                  {{- if not (and (eq $authorIndex 1) (gt (len $displayAuthors) 2)) -}}
                   <span itemprop="author" itemscope itemtype="https://schema.org/Person">
                     {{- with $author.given -}}
                       <meta itemprop="givenName" content="{{ . }}">
@@ -140,8 +141,9 @@
                       <span itemprop="familyName">{{ . | markdownify }}</span>
                     {{- end -}}
                   </span>
+                  {{- end -}}{{/*custom code line*/}}
                   {{- if and (eq $authorIndex 0) (gt (len $displayAuthors) 2) -}}
-                  ,&#32;
+                  &#32;
                   {{- end -}}
                   {{- if and (eq (len $displayAuthors) 2) (eq $authorIndex 0) -}}&#32;&amp;&#32;
                   {{- end -}}
