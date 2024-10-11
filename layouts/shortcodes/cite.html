@@ -96,7 +96,16 @@
 {{- end }}
 
 {{- if gt (len $bibliographyPath) 0 -}}{{- /* Begin Bibliography Loop */ -}}
-{{- $bibliography := getJSON $bibliographyPath -}}
+{{/*  UPDATED {{- $bibliography := getJSON $bibliographyPath -}} getJSON was deprecated: see https://gohugo.io/functions/data/getjson/ */}}
+{{- $bibliography := dict -}}
+{{- $p := "bibliography.json" -}}
+{{- with resources.Get $p -}}
+  {{- $bibliography = . | transform.Unmarshal -}}
+{{- else -}}
+  {{- errorf "Unable to get resource %q" $p -}}
+{{- end -}}
+
+
 {{- /* -------------------- END Bibliography path -------------------- */ -}}
 <!--custom code -->
   <span class="hugo-cite-intext"

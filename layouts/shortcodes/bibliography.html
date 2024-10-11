@@ -92,7 +92,14 @@
   {{- $bibliographyPath = $constructedBibResource }}
   {{- end }}
 
-  {{- $references = getJSON $bibliographyPath }}
+  {{/*  DEPRECATED getJSON  {{- $references = getJSON $bibliographyPath }} */}}
+  {{- $references := dict -}}
+  {{- $p := "bibliography.json" -}}
+  {{- with resources.Get $p -}}
+    {{- $references = . | transform.Unmarshal -}}
+  {{- else -}}
+    {{- errorf "Unable to get resource %q" $p -}}
+  {{- end -}}
 
 {{- end }}
 
