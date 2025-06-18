@@ -19,7 +19,7 @@
 
     with a link to the complete reference.
 
-  The bibliography file must be a CSL-JSON, specified either in page’s front-
+  The bibliography file must be a CSL-JSON, specified either in page's front-
   matter with the `bibFile` parameter, or in a leaf bundle, with "bib" in
   the file name.
 
@@ -99,6 +99,23 @@
 {{/*  UPDATED {{- $bibliography := getJSON $bibliographyPath -}} getJSON was deprecated: see https://gohugo.io/functions/data/getjson/ */}}
 {{- $bibliography := dict -}}
 {{- $p := "bibliography.json" -}}
+
+{{- /* If a bibliography path was discovered earlier, use it */ -}}
+{{- if gt (len $bibliographyPath) 0 -}}
+  {{- $p = $bibliographyPath -}}
+{{- end -}}
+
+{{- /* resources.Get expects a path relative to the project root (inside the assets dir).
+      Trim any leading slash so both "/assets/foo.json" and "assets/foo.json" work. */ -}}
+{{- if strings.HasPrefix $p "/" -}}
+  {{- $p = strings.TrimPrefix "/" $p -}}
+{{- end -}}
+
+{{- /* Remove assets/ prefix if present, as resources.Get paths are relative to the assets directory root */ -}}
+{{- if strings.HasPrefix $p "assets/" -}}
+  {{- $p = strings.TrimPrefix "assets/" $p -}}
+{{- end -}}
+
 {{- with resources.Get $p -}}
   {{- $bibliography = . | transform.Unmarshal -}}
 {{- else -}}

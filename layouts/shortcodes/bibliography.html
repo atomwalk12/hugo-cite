@@ -32,7 +32,7 @@
   {{< bibliography src="path/to/bib.json" cited="true" >}}
 
 
-  6. Bibliography file may be located at a URL, thanks to Hugo’s
+  6. Bibliography file may be located at a URL, thanks to Hugo's
      `getJSON` function.
      *Note however that this method may have some drawbacks if you are reloading
      often, see the Hugo docs regarding potential issues:*
@@ -92,9 +92,24 @@
   {{- $bibliographyPath = $constructedBibResource }}
   {{- end }}
 
-  {{/*  DEPRECATED getJSON  {{- $references = getJSON $bibliographyPath }} */}}
-  {{- $references := dict -}}
+  {{/* Load bibliography entries from the discovered path, with a sensible fallback */}}
+  {{- $references = dict -}}
   {{- $p := "bibliography.json" -}}
+
+  {{- if gt (len $bibliographyPath) 0 -}}
+    {{- $p = $bibliographyPath -}}
+  {{- end -}}
+
+  {{- /* resources.Get expects path relative to project root (inside assets dir). */ -}}
+  {{- if strings.HasPrefix $p "/" -}}
+    {{- $p = strings.TrimPrefix "/" $p -}}
+  {{- end -}}
+
+  {{- /* Remove assets/ prefix if present */ -}}
+  {{- if strings.HasPrefix $p "assets/" -}}
+    {{- $p = strings.TrimPrefix "assets/" $p -}}
+  {{- end -}}
+
   {{- with resources.Get $p -}}
     {{- $references = . | transform.Unmarshal -}}
   {{- else -}}
