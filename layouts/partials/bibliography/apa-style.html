@@ -140,12 +140,12 @@
 {{/* BEGIN DOI */}}
 {{- define "DOIPart" }}
   {{- if .DOI }}
-  <a href="https://doi.org/{{ .DOI }}"
+  <a href="https://doi.org/{{ .DOI }}" target="_blank" rel="noopener noreferrer"
      itemprop="identifier"
      itemtype="https://schema.org/URL">https://doi.org/{{- .DOI -}}</a>
   {{- else if .URL }}&#32;
   {{- i18n "apa_retrieved_from" | default "Retrieved from" -}}&#32;
-  <a href="{{ .URL }}"
+  <a href="{{ .URL }}" target="_blank" rel="noopener noreferrer"
      itemprop="identifier"
      itemtype="https://schema.org/URL">{{ .URL }}</a>
   {{- end -}}
