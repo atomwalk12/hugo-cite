@@ -34,27 +34,14 @@
 {{- $references := .references }}
 
 {{ if $references }}
-<section class="hugo-cite-bibliography">
-  <ol>
-    {{/* -------------------- BEGIN RANGE BIBLIOGRAPHY -------------------- */}}
-    {{- range $refIndex, $refObject := $references -}}
-      {{- $currentRef := index $references $refIndex }}
-
-      {{- $partialPath := string (printf "bibliography/%s-style.html" $citationStyle) }}
-
-      <div id="{{ $currentRef.id | urlize }}">
-        <!-- removed the names and date cited -->
-
-        <li>
-          {{/*
-            Full bibliographic notice
-          */}}
-
-          {{- partial $partialPath $currentRef -}}</li>
-
-      </div>
+<section>
+  {{- $partialPath := printf "bibliography/%s-style.html" $citationStyle -}}
+  <ol class="hugo-cite-bibliography">
+    {{- range $index, $currentRef := sort $references -}}
+      <li id="{{ $currentRef.id | urlize }}">
+        [{{ add $index 1 }}] {{ partial $partialPath $currentRef }}
+      </li>
     {{- end -}}
-    {{/* -------------------- END RANGE BIBLIOGRAPHY -------------------- */}}
   </ol>
 </section>
 {{- else }}
