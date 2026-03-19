@@ -113,6 +113,8 @@
     {{- end -}}
     {{- end -}}
     </span>)
+  {{- else if isset . "year" }}
+    (<span itemprop="datePublished">{{ .year }}</span>)
   {{- else }}
   ({{ i18n "apa_no_date_abbr" | default "n.d." }}){{/* no date */}}
   {{- end }}
@@ -132,6 +134,8 @@
     {{- end -}}
     {{- end -}}
     </span>)
+  {{- else if isset . "year" }}
+    (<span itemprop="datePublished">{{ .year }}</span>)
   {{- else }}
   (s.d.){{/* no date */}}
   {{- end }}

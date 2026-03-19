@@ -145,6 +145,8 @@
           <a href="#{{- $key | urlize -}}">
             {{- /* <span class="visually-hidden">Citation: </span> */ -}}
             {{- $reference := . -}}
+            {{- $hasIssued := and (isset $reference "issued") (isset $reference.issued "date-parts") -}}
+            {{- $hasYear := isset $reference "year" -}}
 
             {{- /* -------------------- BEGIN Display authors -------------------- */ -}}
             <!--custom code line removed -->
@@ -180,13 +182,15 @@
               {{- end -}}
               <!--custom code -->
               {{- if not $suppressAuthor -}}
+              {{- if or $hasIssued $hasYear -}}
               ,&#32;
+              {{- end -}}
               {{- else -}}
               &#32;(
               {{- end -}}
               <!--custom code end --><!--custom code line removed -->
             {{- /* -------------------- END Display authors -------------------- */ -}}
-            {{- if and (isset $reference "issued") (isset $reference.issued "date-parts") -}}
+            {{- if $hasIssued -}}
               {{- range $index, $dateParts := (index .issued "date-parts") -}}{{- /* range of dates */ -}}
                 {{- range first 1 $dateParts -}}{{/* First element in date-part is the year */ -}}
                 <span itemprop="datePublished">
@@ -194,6 +198,10 @@
                 </span>
                 {{- end -}}
               {{- end -}}
+            {{- else if $hasYear -}}
+              <span itemprop="datePublished">
+                {{- $reference.year -}}
+              </span>
             {{- end -}}
             {{- $currentPages := index $pages $keyIndex -}}
             {{- with $currentPages -}},&#32;
