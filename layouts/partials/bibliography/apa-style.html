@@ -143,15 +143,16 @@
 
 {{/* BEGIN DOI */}}
 {{- define "DOIPart" }}
+  {{- $url := .URL | default (index . "url") -}}
   {{- if .DOI }}
   <a href="https://doi.org/{{ .DOI }}" target="_blank" rel="noopener noreferrer"
      itemprop="identifier"
      itemtype="https://schema.org/URL">https://doi.org/{{- .DOI -}}</a>
-  {{- else if .URL }}&#32;
+  {{- else if $url }}&#32;
   {{- i18n "apa_retrieved_from" | default "Retrieved from" -}}&#32;
-  <a href="{{ .URL }}" target="_blank" rel="noopener noreferrer"
+  <a href="{{ $url }}" target="_blank" rel="noopener noreferrer"
      itemprop="identifier"
-     itemtype="https://schema.org/URL">{{ .URL }}</a>
+     itemtype="https://schema.org/URL">{{ $url }}</a>
   {{- end -}}
 {{- end -}}
 {{- /* END DOI*/ -}}
@@ -310,11 +311,53 @@
 <span itemscope
       itemtype="https://schema.org/WebPage"
       data-type="webpage">
+  {{- $title := .title | default "" -}}
+  {{- $url := .URL | default (index . "url") -}}
+  {{- $titleMatchesSingleAuthor := false -}}
+  {{- if and .author (eq (len .author) 1) $title -}}
+    {{- with index .author 0 -}}
+      {{- if eq (.family | default "") $title -}}
+        {{- $titleMatchesSingleAuthor = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $titleMatchesSingleAuthor -}}
+  <span itemprop="name">
+    {{- if $url -}}
+    <a href="{{ $url }}" target="_blank" rel="noopener noreferrer">{{- $title | markdownify -}}</a>
+    {{- else -}}
+    {{- $title | markdownify -}}
+    {{- end -}}
+  </span>
+  {{- else -}}
   {{- template "authorPart" . -}}
+  {{- end -}}
 
   {{- template "issuedFullPart" . -}}.
 
+  {{- if and $title (not $titleMatchesSingleAuthor) -}}&#32;
+  <span itemprop="name">
+    {{- if $url -}}
+    <a href="{{ $url }}" target="_blank" rel="noopener noreferrer">{{- $title | markdownify -}}</a>
+    {{- else -}}
+    {{- $title | markdownify -}}
+    {{- end -}}
+  </span>.
+  {{- end -}}
+
+  {{- if isset . "container-title" -}}&#32;
+  <span itemprop="isPartOf">{{- index . "container-title" -}}</span>
+  {{- if .publisher -}},&#32;<span itemprop="publisher"
+        itemtype="http://schema.org/Organization"
+        itemscope><span itemprop="name">{{- .publisher -}}</span></span>{{- end -}}.
+  {{- else if .publisher -}}&#32;
+  <span itemprop="publisher"
+        itemtype="http://schema.org/Organization"
+        itemscope><span itemprop="name">{{- .publisher -}}</span></span>.
+  {{- else if and $url (not $title) -}}
   {{- template "DOIPart" . -}}
+  {{- end -}}
 </span>
 {{/* -------------------- END WEBPAGE TYPE -------------------- */}}
 
