@@ -214,7 +214,8 @@
 
           {{- /* Eliminate space between css-hidden citation hover block */ -}}
 
-          <span class="hugo-cite-citation"> {{ partial $partialPath $reference }}</span></span>
+          {{- $citationHTML := partial $partialPath $reference | replaceRE "\\s*\\n\\s*" " " | replaceRE ">\\s+<" "><" | safeHTML -}}
+          <span class="hugo-cite-citation">{{ $citationHTML }}</span></span>
 
         {{- if lt (add 1 $keyIndex) $totalRefs -}};&#32;{{- end -}}
 
